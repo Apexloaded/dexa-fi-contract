@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {DexaFiBase} from "./DexaFiBase.sol";
+import {BaseApp} from "./BaseApp.sol";
 import {IAccount} from "@account-abstraction/contracts/interfaces/IAccount.sol";
 import {PackedUserOperation} from "@account-abstraction/contracts/interfaces/PackedUserOperation.sol";
 import {SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS} from "@account-abstraction/contracts/core/Helpers.sol";
@@ -17,7 +17,7 @@ contract Account is
     Initializable,
     AccessControlUpgradeable,
     ReentrancyGuardUpgradeable,
-    DexaFiBase
+    BaseApp
 {
     error Account_CallFailed(bytes);
 
@@ -45,7 +45,8 @@ contract Account is
         address _entryPoint
     ) public initializer {
         __AccessControl_init();
-        _grantRole(DEFAULT_ADMIN_ROLE, _admin);
+        init_base_app(_admin);
+        _grantRole(MODERATOR_ROLE, msg.sender);
         entryPoint = IEntryPoint(_entryPoint);
     }
 
